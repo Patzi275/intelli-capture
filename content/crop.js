@@ -1,4 +1,13 @@
 
+/**
+ * Crops an image based on the specified area and parameters.
+ * @param {string | Array} image - The image URL or an array of image URLs.
+ * @param {Object} area - The area to be cropped, specified as {x, y, w, h}.
+ * @param {number} dpr - The device pixel ratio.
+ * @param {boolean} preserve - Indicates whether to preserve the aspect ratio when resizing.
+ * @param {string} format - The format of the cropped image (e.g., 'jpeg', 'png').
+ * @param {Function} done - The callback function to be called when the cropping is done, with the cropped image as the argument.
+ */
 function crop (image, area, dpr, preserve, format, done) {
   var top = area.y * dpr
   var left = area.x * dpr

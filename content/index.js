@@ -50,6 +50,7 @@ var init = (done) => {
   })
 }
 
+
 var capture = (force) => {
   chrome.storage.sync.get((config) => {
     if (selection && (config.method === 'crop' || (config.method === 'wait' && force))) {
@@ -136,6 +137,7 @@ var capture = (force) => {
   })
 }
 
+// Create the file name for the screenshot
 var filename = (format) => {
   var pad = (n) => (n = n + '', n.length >= 2 ? n : `0${n}`)
   var ext = (format) => format === 'jpeg' ? 'jpg' : format === 'png' ? 'png' : 'png'
