@@ -12,6 +12,7 @@ var defaults = {
   icon: 'default',
 }
 
+// Recuperation of saved settings from the chrome storage sync
 chrome.storage.sync.get((store) => {
   var config = {}
   Object.assign(config, defaults, JSON.parse(JSON.stringify(store)))
