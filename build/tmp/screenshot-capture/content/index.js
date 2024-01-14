@@ -4,7 +4,7 @@ var jcrop, selection
 var overlay = ((active) => (state) => {
   active = typeof state === 'boolean' ? state : state === null ? active : !active
   $('.jcrop-holder')[active ? 'show' : 'hide']()
-  chrome.runtime.sendMessage({message: 'active', active})
+  chrome.runtime.sendMessage({ message: 'active', active })
 })(false)
 
 var image = (done) => {
@@ -32,7 +32,7 @@ var init = (done) => {
         selection = null
       }, 100)
     }
-  }, function ready () {
+  }, function ready() {
     jcrop = this
 
     $('.jcrop-hline, .jcrop-vline').css({
@@ -74,7 +74,7 @@ var capture = (force) => {
       }, (res) => {
         overlay(false)
         if (devicePixelRatio !== 1 && !config.scaling) {
-          var area = {x: 0, y: 0, w: innerWidth, h: innerHeight}
+          var area = { x: 0, y: 0, w: innerWidth, h: innerHeight }
           crop(res.image, area, devicePixelRatio, config.scaling, config.format, (image) => {
             save(image, config.format, config.save, config.clipboard, config.dialog)
           })
@@ -95,43 +95,43 @@ var capture = (force) => {
       setTimeout(() => {
         var images = []
         var count = 0
-        ;(function scroll (done) {
-          chrome.runtime.sendMessage({
-            message: 'capture', format: config.format, quality: config.quality
-          }, (res) => {
-            var height = innerHeight
-            if (count * innerHeight > container.scrollTop) {
-              height = container.scrollTop - (count - 1) * innerHeight
-            }
-            images.push({height, offset: container.scrollTop, image: res.image})
-
-            if (
-              (count * innerHeight === container.scrollTop &&
-              (count - 1) * innerHeight === container.scrollTop) ||
-              count * innerHeight > container.scrollTop
-              ) {
-              done()
-              return
-            }
-
-            count += 1
-            container.scrollTop = count * innerHeight
-            setTimeout(() => {
-              if (count * innerHeight !== container.scrollTop) {
-                container.scrollTop = count * innerHeight
+          ; (function scroll(done) {
+            chrome.runtime.sendMessage({
+              message: 'capture', format: config.format, quality: config.quality
+            }, (res) => {
+              var height = innerHeight
+              if (count * innerHeight > container.scrollTop) {
+                height = container.scrollTop - (count - 1) * innerHeight
               }
-              scroll(done)
-            }, config.delay)
+              images.push({ height, offset: container.scrollTop, image: res.image })
+
+              if (
+                (count * innerHeight === container.scrollTop &&
+                  (count - 1) * innerHeight === container.scrollTop) ||
+                count * innerHeight > container.scrollTop
+              ) {
+                done()
+                return
+              }
+
+              count += 1
+              container.scrollTop = count * innerHeight
+              setTimeout(() => {
+                if (count * innerHeight !== container.scrollTop) {
+                  container.scrollTop = count * innerHeight
+                }
+                scroll(done)
+              }, config.delay)
+            })
+          })(() => {
+            overlay(false)
+            var area = { x: 0, y: 0, w: innerWidth, h: images.reduce((all, { height }) => all += height, 0) }
+            crop(images, area, devicePixelRatio, config.scaling, config.format, (image) => {
+              document.querySelector('html').style.overflow = ''
+              document.querySelector('body').style.overflow = ''
+              save(image, config.format, config.save, config.clipboard, config.dialog)
+            })
           })
-        })(() => {
-          overlay(false)
-          var area = {x: 0, y: 0, w: innerWidth, h: images.reduce((all, {height}) => all += height, 0)}
-          crop(images, area, devicePixelRatio, config.scaling, config.format, (image) => {
-            document.querySelector('html').style.overflow = ''
-            document.querySelector('body').style.overflow = ''
-            save(image, config.format, config.save, config.clipboard, config.dialog)
-          })
-        })
       }, config.delay)
     }
   })
@@ -171,12 +171,12 @@ var save = (image, format, save, clipboard, dialog) => {
       var [header, base64] = image.split(',')
       var [_, type] = /data:(.*);base64/.exec(header)
       var binary = atob(base64)
-      var array = Array.from({length: binary.length})
+      var array = Array.from({ length: binary.length })
         .map((_, index) => binary.charCodeAt(index))
       navigator.clipboard.write([
         new ClipboardItem({
           // jpeg is not supported on write, though the encoding is preserved
-          'image/png': new Blob([new Uint8Array(array)], {type: 'image/png'})
+          'image/png': new Blob([new Uint8Array(array)], { type: 'image/png' })
         })
       ]).then(() => {
         if (dialog) {
