@@ -22,7 +22,7 @@ var init = (done) => {
     bgColor: 'none',
     onSelect: (e) => {
       selection = e
-      alert(`x: ${e.x}, y: ${e.y}, x2: ${e.x2}, y2: ${e.y2}`)
+      // alert(`x: ${e.x}, y: ${e.y}, x2: ${e.x2}, y2: ${e.y2}`)
     },
     onChange: (e) => {
       selection = e
@@ -62,7 +62,19 @@ var capture = (force) => {
         }, (res) => {
           overlay(false)
           crop(res.image, _selection, devicePixelRatio, config.scaling, config.format, (image) => {
-            save(image, config.format, config.save, config.clipboard, config.dialog)
+            // const forcedData = {image: "https://i.ibb.co/GcJdkd9/pexels-pixabay-60597.jpg"};
+            // const data = new FormData();
+            // data.append("image", image);
+            // console.log(data);
+            
+            tempFileUpload(image);
+
+            // getMessage(data, (response) => {
+            //   alert(JSON.stringify(response));
+            // }, (error) => {
+            //   alert(JSON.stringify(error));
+            // });
+            // save(image, config.format, config.save, config.clipboard, config.dialog)
             selection = null
           })
         })
@@ -216,3 +228,4 @@ chrome.runtime.onMessage.addListener((req, sender, res) => {
   }
   return true
 })
+
