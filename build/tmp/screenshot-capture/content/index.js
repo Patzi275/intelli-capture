@@ -62,18 +62,18 @@ var capture = (force) => {
         }, (res) => {
           overlay(false)
           crop(res.image, _selection, devicePixelRatio, config.scaling, config.format, (image) => {
-            // const forcedData = {image: "https://i.ibb.co/GcJdkd9/pexels-pixabay-60597.jpg"};
-            // const data = new FormData();
-            // data.append("image", image);
-            // console.log(data);
-            
-            tempFileUpload(image);
+            var onMessageGenerated = () => {};
 
-            // getMessage(data, (response) => {
-            //   alert(JSON.stringify(response));
-            // }, (error) => {
-            //   alert(JSON.stringify(error));
-            // });
+            generateBox(image, _selection, ({container, changeContent}) => {
+              document.body.appendChild(container);
+              onMessageGenerated = changeContent;
+            });
+
+            
+            processImage(image).then((response) => {
+              onMessageGenerated(response);
+            });
+
             // save(image, config.format, config.save, config.clipboard, config.dialog)
             selection = null
           })
